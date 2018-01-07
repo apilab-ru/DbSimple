@@ -348,3 +348,27 @@ function myLogger($db, $sql)
 // Will be printed something like:
 SELECT * FROM U_GET_PARAM_LIST;
   --- 13 ms = 4+3+6; returned 30 row(s);
+  
+CONSTRUCT MYSQLI
+include $_SERVER['DOCUMENT_ROOT'] ."/vendor/DbSimple/Generic.php";
+$this->db = \DbSimple_Generic::connect("mysqli://{$param['user']}:{$param['pass']}@{$param['host']}/{$param['table']}");
+  
+DEBUG
+$db->setLogger([$this,'logger']);
+function logger($db, $sql)
+ {
+        $this->setLogger(0);
+        $caller = $this->db->findLibraryCaller();
+        $this->insert("log",array(
+            'name'=>"sql call at {$caller['file']} line {$caller['line']}",
+            'log'=>$sql
+        ));
+        
+        $this->setLogger(1);
+}
+    
+$db->getErrors();
+    
+Escape
+$db->link->escape_string($str);
+    
