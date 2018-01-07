@@ -83,7 +83,7 @@ class DbSimple_Generic
      * Choose database driver according to DSN. Return new instance
      * of this driver.
      */
-    function& connect($dsn)
+    public static function& connect($dsn)
     {
         // Load database driver and create its instance.
         $parsed = DbSimple_Generic::parseDSN($dsn);
@@ -110,7 +110,7 @@ class DbSimple_Generic
                 }
             }
         }
-        $object =& new $class($parsed);
+        $object =new $class($parsed);
         if (isset($parsed['ident_prefix'])) {
             $object->setIdentPrefix($parsed['ident_prefix']);
         }
@@ -130,7 +130,7 @@ class DbSimple_Generic
                     fclose($fp);
                     unlink($testFile);                
                     require_once 'Cache' . '/Lite.php'; // "." -> no phpEclipse notice
-                    $t =& new Cache_Lite(array('cacheDir' => $dir.'/', 'lifeTime' => null, 'automaticSerialization' => true));
+                    $t =new Cache_Lite(array('cacheDir' => $dir.'/', 'lifeTime' => null, 'automaticSerialization' => true));
                     $object->_cacher =& $t;
                     break;
                 }
@@ -146,7 +146,7 @@ class DbSimple_Generic
      * Parse a data source name.
      * See parse_url() for details. 
      */
-    function parseDSN($dsn)
+    public static function parseDSN($dsn)
     {
         if (is_array($dsn)) return $dsn;
         $parsed = @parse_url($dsn);
@@ -591,10 +591,12 @@ class DbSimple_Generic_Database extends DbSimple_Generic_LastError
             // Run the query (counting time).
             $qStart = $this->_microtime();        
             $result = $this->_performQuery($query);
+            
             $fetchTime = $firstFetchTime = 0;
 
-            if (is_resource($result)) {
+            if (is_object($result)) {
                 $rows = array();
+                
                 // Fetch result row by row.
                 $fStart = $this->_microtime();
                 $row = $this->_performFetch($result);
@@ -646,7 +648,7 @@ class DbSimple_Generic_Database extends DbSimple_Generic_LastError
             $this->_transformQuery($query, 'GET_TOTAL');
             $total = call_user_func_array(array(&$this, 'selectCell'), $query);
         }
-
+        
         return $result;
     }
     
@@ -1130,10 +1132,10 @@ class DbSimple_Generic_Database extends DbSimple_Generic_LastError
      * 
      * Prevent from direct creation of this object.
      */
-    function DbSimple_Generic_Database()
+    /*function DbSimple_Generic_Database()
     {
         die("This is protected constructor! Do not instantiate directly at ".__FILE__." line ".__LINE__);
-    }
+    }*/
     
     // Identifiers prefix (used for ?_ placeholder).
     var $_identPrefix = '';
