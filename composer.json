@@ -2,7 +2,7 @@
     "name": "apilab-ru/db-simple",
     "description": "Fork DBSimple add Mysqli",
     stability":"stable",
-    "version":"1.0.1",
+    "version":"1.0.0",
     "require": {
         "php": "^5.6",
         "another-vendor/package": "1.*"
